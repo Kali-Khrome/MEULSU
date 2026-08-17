@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ULSU × MyExperience — Leadership Reporting</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #132E6E;
+    --navy-mid:   #1B4298;
+    --navy-light: #2553C0;
+    --gold:       #FCC015;
+    --gold-light: #FFD340;
+    --tertiary:   #ABEEFE;
+    --white:      #f7f8fa;
+    --off-white:  #eef0f4;
+    --border:     #d0d5e0;
+    --text:       #1a2540;
+    --text-muted: #5a6480;
+    --panel-bg:   #f0f3f8;
+    --radius:     6px;
+    --radius-lg:  12px;
+    --shadow:     0 2px 12px rgba(19,46,110,0.10);
+    --shadow-lg:  0 8px 32px rgba(19,46,110,0.18);
+    --transition: 0.18s ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ─────────────────────────────────────────────
+     HEADER — fixed, transparent over hero,
+     gains solid bg + blur after scroll
+  ───────────────────────────────────────────── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 200;
+    background: transparent;
+    transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+  }
+  header.scrolled {
+    background: rgba(19,46,110,0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 24px rgba(0,0,0,0.22);
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: white;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .header-brand .sep { color: var(--gold); font-weight: 300; font-size: 1rem; }
+  .header-badge {
+    background: rgba(252,192,21,0.15);
+    border: 1px solid rgba(252,192,21,0.35);
+    color: var(--gold-light);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    transition: background var(--transition), border-color var(--transition);
+  }
+  header.scrolled .header-badge {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  /* ─────────────────────────────────────────────
+     HERO — full viewport, image with dark
+     gradient, text anchored to lower-left
+  ───────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 3rem 5.5rem;
+    background:
+      linear-gradient(to bottom, rgba(8,16,44,0.40) 0%, rgba(8,16,44,0.70) 45%, rgba(8,16,44,0.93) 100%),
+      linear-gradient(to right,  rgba(8,16,44,0.70) 0%, rgba(8,16,44,0.20) 65%, transparent 100%),
+      url('2023 Fall Student Photoshoot-125.jpg') center / cover no-repeat;
+    overflow: hidden;
+  }
+
+  /* subtle warm accent glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 75% 25%, rgba(252,192,21,0.07) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(171,238,254,0.10);
+    border: 1px solid rgba(171,238,254,0.28);
+    color: var(--tertiary);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 13px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: white;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold-light);
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.52);
+    font-weight: 300;
+    line-height: 1.75;
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ghost button on hero */
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 50px;
+    padding: 0.72rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition),
+                color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .btn-ghost:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+    box-shadow: 0 6px 22px rgba(252,192,21,0.38);
+    transform: translateY(-1px);
+  }
+  .btn-ghost:active { transform: translateY(0); }
+  .btn-arrow { transition: transform var(--transition); }
+  .btn-ghost:hover .btn-arrow { transform: translateX(3px); }
+
+  /* scroll hint */
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    right: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255,255,255,0.28);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    z-index: 1;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.28), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50%       { opacity: 0.7; transform: scaleY(1.2); }
+  }
+
+  /* ─────────────────────────────────────────────
+     CONTENT — below the fold
+  ───────────────────────────────────────────── */
+  .content-wrap {
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 4rem 1.75rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.25rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CONTEXT CARD ── */
+  .context-card {
+    background: var(--navy);
+    border-radius: var(--radius-lg);
+    padding: 1.85rem 2.1rem;
+    color: rgba(255,255,255,0.68);
+    font-size: 0.9rem;
+    line-height: 1.82;
+    position: relative;
+    overflow: hidden;
+  }
+  .context-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 220px; height: 100%;
+    background: radial-gradient(ellipse at right, rgba(252,192,21,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .context-card strong { color: var(--gold-light); font-weight: 600; }
+  .context-card p + p  { margin-top: 0.75rem; }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .card {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-header-strip {
+    background: var(--navy);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-bottom: 3px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .card-header-strip h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .card-content {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.72;
+  }
+  .card-content ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+  }
+  .card-content ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .card-content ul li::before {
+    content: '—';
+    color: var(--gold);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 0.05em;
+  }
+
+  /* ── DEADLINE PILL ── */
+  .deadline-pill {
+    display: block;
+    width: fit-content;
+    background: rgba(171,238,254,0.28);
+    border: 1px solid rgba(171,238,254,0.60);
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── FILLED CTA BUTTON (content area) ── */
+  .btn-begin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.85rem 2.4rem;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+    box-shadow: 0 4px 18px rgba(252,192,21,0.30);
+  }
+  .btn-begin:hover {
+    background: var(--gold-light);
+    box-shadow: 0 8px 28px rgba(252,192,21,0.42);
+    transform: translateY(-2px);
+  }
+  .btn-begin:active { transform: translateY(0); }
+  .btn-begin:hover .btn-arrow { transform: translateX(3px); }
+
+  /* ── CTA STRIP ── */
+  .cta-strip {
+    text-align: center;
+    padding: 0.75rem 0 0.5rem;
+  }
+  .cta-sub {
+    margin-top: 0.85rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .cta-sub a {
+    color: var(--navy-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ─────────────────────────────────────────────
+     SCROLL REVEAL — elements slide up into view
+  ───────────────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(44px);
+    transition:
+      opacity  0.72s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0s);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.38);
+    text-align: center;
+    font-size: 0.73rem;
+    padding: 1.35rem 2rem;
+    line-height: 1.7;
+  }
+  footer a { color: rgba(255,255,255,0.48); text-decoration: none; }
+  footer a:hover { color: var(--gold-light); }
+
+  /* ─────────────────────────────────────────────
+     RESPONSIVE
+  ───────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    header { padding: 0 1.5rem; }
+
+    .hero {
+      align-items: center;
+      text-align: center;
+      padding: 7rem 1.5rem 5rem;
+    }
+    .hero-inner { max-width: 100%; }
+    .hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
+    .hero-sub { max-width: 100%; margin-left: auto; margin-right: auto; }
+    .hero-scroll-hint { display: none; }
+
+    .content-wrap { padding: 3rem 1.25rem 4rem; }
+    .info-grid { grid-template-columns: 1fr; }
+    .context-card { padding: 1.35rem 1.5rem; }
+  }
+
+  @media (max-width: 420px) {
+    .hero { padding: 6.5rem 1.25rem 4.5rem; }
+    .hero h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header id="siteHeader">
+  <a class="header-brand" href="index.html">
+    <span>ULSU</span>
+    <span class="sep">×</span>
+    <span>MyExperience</span>
+  </a>
+  <div class="header-badge">Leadership Reporting</div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Monthly Activity Report</div>
+    <h1>Document Your<br>Club's <em>Leadership</em><br>Activity.</h1>
+    <p class="hero-sub">
+      The official reporting tool for ULSU-registered clubs to submit monthly leadership data to the VP of Student Life and earn MyExperience recognition.
+    </p>
+    <a href="ulsu-reporter.html" class="btn-ghost">
+      Begin Now
+      <span class="btn-arrow">→</span>
+    </a>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── CONTENT ── -->
+<div class="content-wrap">
+
+  <!-- ABOUT -->
+  <div class="section-label reveal">About This System</div>
+  <div class="context-card reveal" style="--reveal-delay: 0.08s">
+    <p>
+      The <strong>ULSU × MyExperience Leadership Reporting System</strong> is the formal channel through which ULSU-registered club members document their leadership contributions each month. Reports submitted here are reviewed by the <strong>VP of Student Life</strong> and used to validate MyExperience credit for the students involved.
+    </p>
+    <p>
+      MyExperience is the University of Lethbridge's co-curricular recognition program. It acknowledges the time, skill, and effort students invest in campus life beyond the classroom — including club leadership/volunteerism. To receive recognition, your club's activity must be reported accurately and on time each month.
+    </p>
+    <p>
+      This form takes roughly <strong>5–10 minutes</strong> to complete. Once submitted, your email client will open with a pre-filled receipt addressed to the VP of Student Life. Simply click Send to finalize your submission.
+    </p>
+  </div>
+
+  <!-- REMINDERS -->
+  <div class="section-label reveal" style="--reveal-delay: 0.05s">Before You Begin</div>
+  <div class="info-grid">
+
+    <div class="card reveal" style="--reveal-delay: 0.10s">
+      <div class="card-header-strip">
+        <span>&#10003;</span>
+        <h3>Data Accuracy</h3>
+      </div>
+      <div class="card-content">
+        <p>Ensure the following are accurate before submitting. Errors may delay your recognition or require resubmission.</p>
+        <ul>
+          <li>Student IDs match university records exactly</li>
+          <li>Hours committed may be rounded up to the nearest whole hour</li>
+          <li>Position titles are consistent with your club's constitution</li>
+          <li>Reporting period dates cover the correct calendar month</li>
+          <li>Contact email is monitored and belongs to the reporter</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card reveal" style="--reveal-delay: 0.20s">
+      <div class="card-header-strip">
+        <span>&#9201;</span>
+        <h3>Submission Deadline</h3>
+      </div>
+      <div class="card-content">
+        <span class="deadline-pill">Monthly — Last Day of Each Month</span>
+        <p>Reports must be submitted <strong style="color:var(--text);">before the last day of the reporting month</strong> to be counted toward that period's MyExperience recognition.</p>
+        <p style="margin-top:0.75rem;">Late submissions may be accepted at the discretion of the VP of Student Life but are not guaranteed recognition for the missed period. If in doubt, submit early.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-strip reveal" style="--reveal-delay: 0.08s">
+    <a href="ulsu-reporter.html" class="btn-begin">
+      Begin Now
+      <span class="btn-arrow">→</span>
+    </a>
+    <p class="cta-sub">
+      Questions? Contact <a href="mailto:su.studentlife@uleth.ca">su.studentlife@uleth.ca</a> or <a href="mailto:my.experience@uleth.ca">my.experience@uleth.ca</a>
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  ULSU × MyExperience Leadership Reporting System &nbsp;|&nbsp;
+  University of Lethbridge Students' Union &nbsp;|&nbsp;
+  <a href="ulsu-reporter.html">Open Report Form</a> &nbsp;|&nbsp;
+  <a href="ulsu-admin.html">Admin Dashboard</a>
+</footer>
+
+<script>
+  // ── HEADER SCROLL STATE ─────────────────────────────────────────────
+  const header = document.getElementById('siteHeader');
+  const heroEl = document.querySelector('.hero');
+
+  function onScroll() {
+    if (window.scrollY > heroEl.offsetHeight * 0.15) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run once on load
+
+  // ── SCROLL REVEAL ──────────────────────────────────────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -32px 0px'
+  });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
